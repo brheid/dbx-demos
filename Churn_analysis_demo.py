@@ -325,10 +325,11 @@ display(confusion_matrix.show())
 
 # once you have the model artifact you can deploy a number of ways...  get this from the experiment
 
-#AWS E2Demo Shard
-#loaded_model = mlflow.spark.load_model("runs:/bd3a9deb9bac430c92b8f5050b0c9eed/GBT_model")
+#AWS okta demo shard
+loaded_model = mlflow.spark.load_model("runs:/db219e4f610143ab8ce99583e634b92a/GBT_model")
+
 #Azure FE West shard
-loaded_model = mlflow.spark.load_model("runs:/b2fa1917058c4b8596b83325f8bc7bed/GBT_model")
+#loaded_model = mlflow.spark.load_model("runs:/b2fa1917058c4b8596b83325f8bc7bed/GBT_model")
 
 to_score_df = dfv0.withColumn("churnedIndex", when(col("churn"), 1.0).otherwise(0.0)).drop(col('churnedIndex'))
 scored_df = loaded_model.transform(to_score_df)
@@ -343,11 +344,11 @@ display(scored_df)
 
 import mlflow
 
-#AWS E2Demo shard
-#logged_model = 'dbfs:/databricks/mlflow-tracking/1132149811674375/bd3a9deb9bac430c92b8f5050b0c9eed/artifacts/GBT_model'
+#AWS okta demo shard
+logged_model = 'dbfs:/databricks/mlflow-tracking/9487869/db219e4f610143ab8ce99583e634b92a/artifacts/GBT_model'
 
 #Azure FEWest Shard
-logged_model = 'dbfs:/databricks/mlflow-tracking/1793510902329417/b2fa1917058c4b8596b83325f8bc7bed/artifacts/GBT_model'
+#logged_model = 'dbfs:/databricks/mlflow-tracking/1793510902329417/b2fa1917058c4b8596b83325f8bc7bed/artifacts/GBT_model'
 
 # Load model as a PyFuncModel.
 loaded_model = mlflow.pyfunc.load_model(logged_model)
@@ -423,9 +424,9 @@ display(results_df)
 # COMMAND ----------
 
 #Azure FEWest Shard
-experimentID = '1793510902329417'
+#experimentID = '1793510902329417'
 # AWS
-
+experimentID = '9487869'
 
 # COMMAND ----------
 
