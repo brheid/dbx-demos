@@ -15,7 +15,7 @@
 
 # COMMAND ----------
 
-# MAGIC %fs mv /FileStore/shared_uploads/brad.heide@databricks.com/churn_analysis.csv /Users/brad.heide@databricks.com/ml/churn/churn_analysis.csv
+# %fs mv /FileStore/shared_uploads/brad.heide@databricks.com/churn_analysis.csv /Users/brad.heide@databricks.com/ml/churn/churn_analysis.csv
 
 # COMMAND ----------
 
@@ -66,7 +66,7 @@ dbutils.fs.rm(DELTALAKE_SILVER_PATH, recurse=True)
 # COMMAND ----------
 
 # MAGIC %sql 
-# MAGIC -- create database brheid
+# MAGIC --create database brheid;
 # MAGIC use brheid
 
 # COMMAND ----------
@@ -325,7 +325,11 @@ display(confusion_matrix.show())
 
 # once you have the model artifact you can deploy a number of ways...  get this from the experiment
 
-loaded_model = mlflow.spark.load_model("runs:/bd3a9deb9bac430c92b8f5050b0c9eed/GBT_model")
+#AWS E2Demo Shard
+#loaded_model = mlflow.spark.load_model("runs:/bd3a9deb9bac430c92b8f5050b0c9eed/GBT_model")
+#Azure FE West shard
+loaded_model = mlflow.spark.load_model("runs:/b2fa1917058c4b8596b83325f8bc7bed/GBT_model")
+
 to_score_df = dfv0.withColumn("churnedIndex", when(col("churn"), 1.0).otherwise(0.0)).drop(col('churnedIndex'))
 scored_df = loaded_model.transform(to_score_df)
 display(scored_df)
@@ -338,7 +342,12 @@ display(scored_df)
 # COMMAND ----------
 
 import mlflow
-logged_model = 'dbfs:/databricks/mlflow-tracking/1132149811674375/bd3a9deb9bac430c92b8f5050b0c9eed/artifacts/GBT_model'
+
+#AWS E2Demo shard
+#logged_model = 'dbfs:/databricks/mlflow-tracking/1132149811674375/bd3a9deb9bac430c92b8f5050b0c9eed/artifacts/GBT_model'
+
+#Azure FEWest Shard
+logged_model = 'dbfs:/databricks/mlflow-tracking/1793510902329417/b2fa1917058c4b8596b83325f8bc7bed/artifacts/GBT_model'
 
 # Load model as a PyFuncModel.
 loaded_model = mlflow.pyfunc.load_model(logged_model)
@@ -367,10 +376,10 @@ client = MlflowClient()
 
 # for version in versions:
 #     client.delete_model_version(name="Churn_analysis", version=version)
-model_name = "Churn_analysis"
+model_name = "brheid_churn"
 
 #Change Prod to Staging etc this pulls from the repository
-prod_model = client.get_latest_versions(model_name, stages = ['Production'])[0]  
+prod_model = client.get_latest_versions(model_name, stages = ['Staging'])[0]  
 
 model_source = prod_model.source
 print(prod_model.name)
@@ -413,7 +422,10 @@ display(results_df)
 
 # COMMAND ----------
 
-experimentID = '3236988540095643'
+#Azure FEWest Shard
+experimentID = '1793510902329417'
+# AWS
+
 
 # COMMAND ----------
 
