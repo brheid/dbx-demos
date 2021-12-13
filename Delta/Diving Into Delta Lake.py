@@ -125,7 +125,8 @@ cleanup_paths_and_tables()
 
 # COMMAND ----------
 
-parquet_path = "file:/dbfs/brheid/delta_demo/loans_parquet/"
+#parquet_path = "file:/dbfs/brheid/delta_demo/loans_parquet/"
+parquet_path = "abfss://deltalake@oneenvadls.dfs.core.windows.net/brheid/lendingclub/"
 
 df = (spark.read.format("parquet").load(parquet_path)
       .withColumn("type", lit("batch"))
@@ -143,7 +144,8 @@ df.write.format("delta").mode("overwrite").saveAsTable("loans_delta")
 # MAGIC %sql
 # MAGIC CREATE TABLE brheid_deltadb.loans_delta2
 # MAGIC USING delta
-# MAGIC AS SELECT * FROM parquet.`/brheid/delta_demo/loans_parquet`;
+# MAGIC AS SELECT * FROM parquet.`abfss://deltalake@oneenvadls.dfs.core.windows.net/brheid/lendingclub/`;
+# MAGIC --`/brheid/delta_demo/loans_parquet`;
 # MAGIC Select * from brheid_deltadb.loans_delta2;
 
 # COMMAND ----------
