@@ -93,6 +93,10 @@ cleanup_paths_and_tables()
 
 # COMMAND ----------
 
+# MAGIC %md <img src="/files/lakehouse.png"/>
+
+# COMMAND ----------
+
 # MAGIC %md # Getting started with <img src="https://docs.delta.io/latest/_static/delta-lake-logo.png" width=300/>
 # MAGIC 
 # MAGIC An open-source storage layer for data lakes that brings ACID transactions to Apache Spark™ and big data workloads.
@@ -211,6 +215,7 @@ display(spark.readStream.format("delta").table("brheid_deltadb.loans_delta").gro
 # COMMAND ----------
 
 # MAGIC %md ### Add a batch query to show we can serve consistent results even while the table is in use. Concurent read/Write with delta!
+# MAGIC Show the same query in DBX SQL
 
 # COMMAND ----------
 
@@ -234,6 +239,8 @@ stop_all_streams()
 # COMMAND ----------
 
 # MAGIC %md View the Delta Lake transaction log
+# MAGIC 
+# MAGIC /dbfs/brheid/delta_demo/loans_parquet/_delta_log
 
 # COMMAND ----------
 
@@ -257,7 +264,7 @@ stop_all_streams()
 
 # COMMAND ----------
 
-# Generate `new_data` with additional column
+# Generate `new_data` with additional column CREDIT SCORE
 new_column = [StructField("credit_score", IntegerType(), True)]
 new_schema = StructType(spark.table("loans_delta").schema.fields + new_column)
 data = [(99997, 10000, 1338.55, "CA", "batch", datetime.now(), 649),
