@@ -14,6 +14,14 @@
 
 # COMMAND ----------
 
+# MAGIC %md NOTES
+# MAGIC Using the downloaded parquet file in DBFS for most things, but have a copy of the parquet file in ADLS which I use up front to demonstrate the reach into ADLS.
+# MAGIC Adjusted the Delta features list to correllate to order of shown features.
+# MAGIC After stream visualtization, move to DBXSQL and query table. Create same visualization. Show Schema browswer and do quick tour.
+# MAGIC Make sure endpoint is up and runnign or this will be a fail.
+
+# COMMAND ----------
+
 db = "brheid_deltadb"
 
 spark.sql(f"CREATE DATABASE IF NOT EXISTS {db}")
@@ -93,21 +101,21 @@ cleanup_paths_and_tables()
 
 # COMMAND ----------
 
-# MAGIC %md <img src="/files/lakehouse.png"/>
+# MAGIC %md <img src="/files/lakehouse.png" width=1024/>
 
 # COMMAND ----------
 
-# MAGIC %md # Getting started with <img src="https://docs.delta.io/latest/_static/delta-lake-logo.png" width=300/>
+# MAGIC %md # What is <img src="https://docs.delta.io/latest/_static/delta-lake-logo.png" width=300/>
 # MAGIC 
 # MAGIC An open-source storage layer for data lakes that brings ACID transactions to Apache Spark™ and big data workloads.
 # MAGIC 
-# MAGIC * **ACID Transactions**: Ensures data integrity and read consistency with complex, concurrent data pipelines.
+# MAGIC * **Open Format**: Stored as Parquet format in blob storage.
 # MAGIC * **Unified Batch and Streaming Source and Sink**: A table in Delta Lake is both a batch table, as well as a streaming source and sink. Streaming data ingest, batch historic backfill, and interactive queries all just work out of the box. 
+# MAGIC * **ACID Transactions**: Ensures data integrity and read consistency with complex, concurrent data pipelines.
+# MAGIC * **Audit History**: History of all the operations that happened in the table.
 # MAGIC * **Schema Enforcement and Evolution**: Ensures data cleanliness by blocking writes with unexpected.
 # MAGIC * **Time Travel**: Query previous versions of the table by time or version number.
 # MAGIC * **Deletes and upserts**: Supports deleting and upserting into tables with programmatic APIs.
-# MAGIC * **Open Format**: Stored as Parquet format in blob storage.
-# MAGIC * **Audit History**: History of all the operations that happened in the table.
 # MAGIC * **Scalable Metadata management**: Able to handle millions of files are scaling the metadata operations with Spark.
 
 # COMMAND ----------
@@ -235,6 +243,7 @@ stop_all_streams()
 # COMMAND ----------
 
 # MAGIC %md ## ![Delta Lake Tiny Logo](https://pages.databricks.com/rs/094-YMS-629/images/delta-lake-tiny-logo.png) ACID Transactions
+# MAGIC Audit history of all transactions for a table
 
 # COMMAND ----------
 
@@ -244,7 +253,9 @@ stop_all_streams()
 
 # COMMAND ----------
 
-# MAGIC %sql DESCRIBE HISTORY brheid_deltadb.loans_delta
+# MAGIC %sql 
+# MAGIC -- Show audit history of table
+# MAGIC DESCRIBE HISTORY brheid_deltadb.loans_delta
 
 # COMMAND ----------
 
@@ -397,7 +408,7 @@ spark.sql("SELECT COUNT(*) FROM brheid_deltadb.loans_delta VERSION AS OF 0").sho
 
 # COMMAND ----------
 
-# MAGIC %md ###![Delta Lake Logo Tiny](https://pages.databricks.com/rs/094-YMS-629/images/delta-lake-tiny-logo.png) Use time travel and `INSERT INTO` to add the user back into our table
+# MAGIC %md ###![Delta Lake Logo Tiny](https://pages.databricks.com/rs/094-YMS-629/images/delta-lake-tiny-logo.png)  Use time travel and `INSERT INTO` to add the user back into our table
 
 # COMMAND ----------
 
